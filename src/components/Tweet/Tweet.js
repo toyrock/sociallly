@@ -6,6 +6,7 @@ import "./Tweet.css";
 export function Tweet({ id, content, setTweets }) {
   const [showAll, setShowAll] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [newTweetContent, setNewTweetContent] = useState(content);
   // handle tweet deletion
   const handleDelete = () => {
     setTweets((previousTweets) => {
@@ -31,6 +32,22 @@ export function Tweet({ id, content, setTweets }) {
   const handleCancel = () => {
     setEdit(false);
   };
+
+  const handleSave = () => {
+    setTweets((previousTweets) => {
+      return previousTweets.map((tweet) => {
+        if (tweet.id === id) {
+          return {
+            id: tweet.id,
+            content: newTweetContent,
+          };
+        } else {
+          return tweet;
+        }
+      });
+    });
+    handleCancel();
+  };
   return (
     <div className="tweet">
       <img
@@ -42,7 +59,10 @@ export function Tweet({ id, content, setTweets }) {
       />
       <div className="tweet__input">
         {edit ? (
-          <textarea />
+          <textarea
+            value={newTweetContent}
+            onChange={(event) => setNewTweetContent(event.target.value)}
+          />
         ) : showAll ? (
           <p>{content}</p>
         ) : (
@@ -53,7 +73,7 @@ export function Tweet({ id, content, setTweets }) {
 
         {edit ? (
           <div className="tweet__actions">
-            <button>Save</button>
+            <button onClick={handleSave}>Save</button>
             <button onClick={handleCancel}>Cancel</button>
           </div>
         ) : (
