@@ -1,7 +1,17 @@
 import Avatar from "../../assets/avatar.jpg";
 import "./Tweet.css";
 
-export function Tweet({content}) {
+export function Tweet({ id, content, setTweets }) {
+  // handle tweet deletion
+  const handleDelete = () => {
+    setTweets((previousTweets) => {
+      // return the new array or filtered tweets
+      return previousTweets.filter((tweet) => {
+        // a tweet is gonna stay in the array if its id is different from the the id of the curretn tweet
+        return tweet.id !== id;
+      });
+    });
+  };
   return (
     <div className="tweet">
       <img
@@ -15,7 +25,7 @@ export function Tweet({content}) {
         <p>{content}</p>
         <div className="tweet__actions">
           <button>Edit</button>
-          <button>Delete</button>
+          <button onClick={handleDelete}>Delete</button>
           <button>Read more</button>
         </div>
       </div>
