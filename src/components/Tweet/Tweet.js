@@ -1,7 +1,11 @@
+import { useState } from "react";
 import Avatar from "../../assets/avatar.jpg";
 import "./Tweet.css";
 
+// I receuve the id, the content and the setTweets function
 export function Tweet({ id, content, setTweets }) {
+  const [showAll, setShowAll] = useState(false);
+  const [edit, setEdit] = useState(false);
   // handle tweet deletion
   const handleDelete = () => {
     setTweets((previousTweets) => {
@@ -11,6 +15,21 @@ export function Tweet({ id, content, setTweets }) {
         return tweet.id !== id;
       });
     });
+  };
+
+  // handle the change of variable showAll
+  const handleShowAll = () => {
+    setShowAll((previousValue) => {
+      return !previousValue;
+    });
+  };
+
+  const handleEdit = () => {
+    setEdit(true);
+  };
+
+  const handleCancel = () => {
+    setEdit(false);
   };
   return (
     <div className="tweet">
@@ -22,12 +41,32 @@ export function Tweet({ id, content, setTweets }) {
         alt="avatar_image"
       />
       <div className="tweet__input">
-        <p>{content}</p>
-        <div className="tweet__actions">
-          <button>Edit</button>
-          <button onClick={handleDelete}>Delete</button>
-          <button>Read more</button>
-        </div>
+        {edit ? (
+          <textarea />
+        ) : showAll ? (
+          <p>{content}</p>
+        ) : (
+          <p>
+            {content.length > 100 ? `${content.substring(0, 100)}...` : content}
+          </p>
+        )}
+
+        {edit ? (
+          <div className="tweet__actions">
+            <button>Save</button>
+            <button onClick={handleCancel}>Cancel</button>
+          </div>
+        ) : (
+          <div className="tweet__actions">
+            <button onClick={handleEdit}>Edit</button>
+            <button onClick={handleDelete}>Delete</button>
+            {content.length > 100 && (
+              <button onClick={handleShowAll}>
+                {showAll ? "Read less" : "Read more"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
